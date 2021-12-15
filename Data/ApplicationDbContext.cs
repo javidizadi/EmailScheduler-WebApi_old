@@ -1,5 +1,4 @@
 using Email_Scheduler_WebApi.Models;
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,4 +11,8 @@ public class ApplicationDbContext : IdentityDbContext
     }
 
     public DbSet<EmailSchedule>? EmailSchedules { get; set; }
+
+    public DbSet<Error> Errors { get; set; }
+
+    public DbSet<ScheduleError> ScheduleErrors { get; set; }
 }
