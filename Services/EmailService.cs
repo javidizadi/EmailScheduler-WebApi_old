@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-
 using Email_Scheduler_WebApi.Models;
 using Microsoft.Extensions.Options;
 
@@ -11,12 +10,12 @@ public class EmailService
 {
     private readonly SmtpClient _client;
 
-    private readonly string _from;
+    private readonly string? _from;
 
     public EmailService(IOptionsMonitor<Configuration.SmtpConfigs> optionsMonitor)
     {
         var configs = optionsMonitor.CurrentValue;
-        
+
         _client = new SmtpClient(configs.Host, configs.Port)
         {
             EnableSsl = true,
@@ -29,14 +28,17 @@ public class EmailService
 
     public async Task SendMail(string? to, string? subject, string? body)
     {
-        var message = new MailMessage(_from, to)
+        if (_from != null && to != null)
         {
-            Subject = subject,
-            Body = body,
-            BodyEncoding = Encoding.UTF8,
-            IsBodyHtml = true
-        };
-        await _client.SendMailAsync(message);
+            var message = new MailMessage(_from, to)
+            {
+                Subject = subject,
+                Body = body,
+                BodyEncoding = Encoding.UTF8,
+                IsBodyHtml = true
+            };
+            await _client.SendMailAsync(message);
+        }
     }
 
     public void Dispose()
